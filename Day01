@@ -1,0 +1,33 @@
+create table icc_world_cup
+(
+Team_1 Varchar(20),
+Team_2 Varchar(20),
+Winner Varchar(20)
+);
+INSERT INTO icc_world_cup values('India','SL','India');
+INSERT INTO icc_world_cup values('SL','Aus','Aus');
+INSERT INTO icc_world_cup values('SA','Eng','Eng');
+INSERT INTO icc_world_cup values('Eng','NZ','NZ');
+INSERT INTO icc_world_cup values('Aus','India','India');
+
+select * from icc_world_cup;
+
+select team_1 from icc_world_cup union select team_2 from icc_world_cup;
+
+select team , count(*) as total_no_of_games_played
+FROM(SELECT team_1 as team from icc_world_cup
+UNION all
+SELECT team_2 as team FROM icc_world_cup)
+AS combining
+GROUP BY team 
+ORDER BY total_no_of_games_played DESC;
+
+
+
+SELECT team_name,count(*) as Total_matches_played , sum(wins) as total_wins , count(*) -sum(wins)  as no_of_losses 
+FROM
+(
+SELECT team_1 as team_name, CASE WHEN team_1 = Winner THEN 1 ELSE 0 END as  wins  from icc_world_cup  UNION ALL
+SELECT team_2 as team_name ,CASE WHEN team_2= Winner THEN 1  ELSE 0 END  as wins from  icc_world_cup  
+) A
+GROUP BY team_name;
